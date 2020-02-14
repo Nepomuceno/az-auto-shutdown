@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -61,13 +62,21 @@ var (
 
 func main() {
 	// create an authorizer from env vars or Azure Managed Service Idenity
-	log.Println("Starting app")
+	log.Println("Starting app Press CTRL+C to end.")
 	authorizer, err := newAuthorizer()
 	if err != nil || authorizer == nil {
 		log.Fatalln("Impossible to authenticate")
 	}
-
-	ticker := time.NewTicker(20 * time.Second)
+	var interval = 300
+	intervalSrt, intervalConfigured := os.LookupEnv("CHECK_SECONDS_INTERVAL")
+	if intervalConfigured {
+		interval, err = strconv.Atoi(intervalSrt)
+		if err != nil {
+			log.Println("CHECK_SECONDS_INTERVAL is not a valid integer")
+			interval = 300
+		}
+	}
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	done := make(chan bool)
 	go func() {
 		for {
