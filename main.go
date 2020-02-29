@@ -149,8 +149,7 @@ func evaluateStatus(auth autorest.Authorizer, subscription string, wg *sync.Wait
 								log.Println(err)
 							}
 						}
-					}
-					if res.Tags["AutoShutDown-ON"] != nil {
+					} else if res.Tags["AutoShutDown-ON"] != nil {
 						insideSchedule := isWithinTime(*res.Tags["AutoShutDown-ON"], time.Now())
 						if insideSchedule && !*isOn {
 							_, err := computeClient.Start(context.Background(), resID.ResourceGroup, resID.Name)

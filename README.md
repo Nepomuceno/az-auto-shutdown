@@ -20,7 +20,7 @@ The values suported for the tag are
 - Month: `February` This will match against every day in February. Months need to be in English
 - Date: `December 25` This will match agaist any time of the day December 25
 
-You can combine the tags for example: `20:00->06:00;Saturday;Sunday;December 25`
+You can combine the tags for example and `AutoShutDown-OFF` tag with the value `20:00->06:00;Saturday;Sunday;December 25` for a VM that will be off from 8PM to 6AM every day and off every weekend plus off also on December 25
 
 
 ## Container Configuration
@@ -46,15 +46,21 @@ By default the VMs are checked every 5 minutes but you can make that more or les
 
 ## Advanced Tag Usages
 
+There are the normal tag usages discussed at [Tag Your Vms](#tag-your-vms) but you can have way more advanced Tags on your VMs.
+
+First how the Tags do work:
+
+`AutoShutDown-ON` will be evaluated only if there is no `AutoShutDown-OFF` tag on the VM. Meaning that you can use a combination of multiple tags acress your vms but if you use ON and OFF on the same VM only the OFF configuratioon will be evaluated. This is done to avoid
+
+
 ### Sample Scenarios
 
 Description | Tag Key | Tag value
 ----------- | ----------- | -----------
-Shut down from 10PM to 6 AM UTC every day | AutoShutDown-OFF | 10pm -> 6am
-Shut down from 10PM to 6 AM UTC every day <br>(different format, same result as above) | AutoShutDown-OFF | 22:00 -> 06:00
-Shut down from 8PM to 12AM and from 2AM to 7AM UTC every day <br>(bringing online from 12-2AM for maintenance in between) | AutoShutDown-OFF | 8PM -> 12AM, 2AM -> 7AM
-Shut down all day Saturday and Sunday <br>(midnight to midnight) | AutoShutDown-OFF | Saturday, Sunday
-Shut down from 2AM to 7AM UTC every day <br>and all day on weekends | AutoShutDown-OFF | 2:00 -> 7:00, Saturday, Sunday
-Shut down on Christmas Day and New Year’s Day | December 25, January 1 | AutoShutDown-OFF
-Shut down from 2AM to 7AM UTC every day,<br>and all day on weekends, and on Christmas Day | AutoShutDown-OFF | 2:00 -> 7:00, Saturday, Sunday, December 25
-Shut down always – I don’t want this VM online, ever | AutoShutDown-OFF | 00:00 -> 23:59:59
+Shut down from 10PM to 6 AM UTC every day (different format, same result as above) | AutoShutDown-OFF | 22:00->06:00
+Shut down from 8PM to 12AM and from 2AM to 7AM UTC every day (bringing online from 12-2AM for maintenance in between) | AutoShutDown-OFF | 20:00->00:00;02:00->07:00
+Shut down all day Saturday and Sunday (midnight to midnight) | AutoShutDown-OFF | Saturday;Sunday
+Shut down from 2AM to 7AM UTC every day and all day on weekends | AutoShutDown-OFF | 02:00->07:00;Saturday;Sunday
+Shut down on Christmas Day and New Year’s Day | AutoShutDown-OFF | December 25, January 1 
+Shut down from 2AM to 7AM UTC every day,and all day on weekends, and on Christmas Day | AutoShutDown-OFF | 02:00->07:00;Saturday;Sunday;December 25
+Shut down always – I don’t want this VM online, ever | AutoShutDown-OFF | 00:00->23:59
